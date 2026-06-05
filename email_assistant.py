@@ -62,7 +62,7 @@ Purpose: {purpose}"""
             response = client.chat.completions.create(
                 model="openai/gpt-oss-120b",
                 messages=[{'role': 'user', 'content': prompt}],
-                options={'temperature': 0.3}
+                temperature=0.3
                 )
            content = response.choices[0].message.content
             
