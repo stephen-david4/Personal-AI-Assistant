@@ -1,8 +1,8 @@
 import streamlit as st
-import ollama
+from groq import Groq
 import tempfile
 import os
-from rag_system import documentAssistant
+from rag_system import DocumentAssistant
 from todo_manager import TodoManager
 from email_assistant import EmailAssistant
 
@@ -40,7 +40,7 @@ apply_theme()
 
 # Initialize Session State Variables
 if 'doc_ai'        not in st.session_state:
-    st.session_state.doc_ai        = documentAssistant()
+    st.session_state.doc_ai        = DocumentAssistant(groq_api_key=st.secrets["GROQ_API_KEY"])
 if 'todos'         not in st.session_state:
     st.session_state.todos         = TodoManager()
 if 'email_ai'      not in st.session_state:
@@ -174,8 +174,12 @@ with tab1:
                     }
                 ] + st.session_state.messages
 
-                response = ollama.chat(model='llama3.2:1b', messages=history)
-                reply    = response['message']['content']
+                client   = Groq(api_key=st.secrets["GROQ_API_KEY"])
+                response = client.chat.completions.create(
+                    model="llama3-8b-8192",
+                    messages=history
+                )
+                reply = response.choices[0].message.content
                 st.write(reply)
 
         st.session_state.messages.append({'role': 'assistant', 'content': reply})
@@ -237,7 +241,6 @@ with tab3:
         height=100
     )
 
-    # ✅ FIX: Error handling added; state only updated after successful generation
     if st.button(" Generate Draft", use_container_width=True):
         if to_email and purpose:
             with st.spinner("AI is writing your email..."):
@@ -245,16 +248,13 @@ with tab3:
                     subject, body = st.session_state.email_ai.generate_draft(
                         to_email, cc_email, purpose
                     )
-                    # Only update state after we actually have content
                     if body.startswith('❌'):
                         st.error(body)
-                        st.info("Make sure Ollama is running: open a terminal and run `ollama serve`")
                     else:
                         st.session_state.draft_subject = subject
                         st.session_state.draft_body    = body
                 except Exception as e:
                     st.error(f"❌ Generation failed: {str(e)}")
-                    st.info("Make sure Ollama is running: open a terminal and run `ollama serve`")
         else:
             st.error("Please fill in the To and Purpose fields")
 
@@ -287,7 +287,7 @@ with tab3:
             st.rerun()
 
 
-# Task tabs
+# Task tab
 with tab4:
     st.subheader(" Task Manager")
 
@@ -343,13 +343,12 @@ Auto-categorization (Rapido → Transport, Swiggy → Food)
     </div>
     """, unsafe_allow_html=True)
 
-    
 
 # ── FOOTER ──
 st.divider()
 st.markdown("""
 <div style='text-align:center; color:gray; font-size:12px;'>
     Personal AI Assistant | Built by Stephen David |
-    LangChain + Ollama + RAG + SQLite + Streamlit
+    LangChain + Groq + RAG + SQLite + Streamlit
 </div>
 """, unsafe_allow_html=True)
