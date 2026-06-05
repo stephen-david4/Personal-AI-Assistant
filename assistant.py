@@ -8,11 +8,11 @@ def chat_with_ai(user_message,conversation_his=[]):
     })
     
     client   = Groq(api_key=st.secrets["GROQ_API_KEY"])
-                response = client.chat.completions.create(
-                    model="openai/gpt-oss-120b",
-                    messages=history
-                )
-                ai_response  = response.choices[0].message.content
+    response = client.chat.completions.create(
+       model="openai/gpt-oss-120b",
+       messages=history
+      )
+    ai_response  = response.choices[0].message.content
     
 
     conversation_his.append({
