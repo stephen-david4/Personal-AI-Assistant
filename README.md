@@ -9,7 +9,7 @@ LangChain, RAG, Groq, SQLite and Streamlit.
 ##  Features
 -  **Chat with AI** — Intelligent conversations with memory
 -  **Document Q&A** — Upload PDFs, ask questions with page citations
--  **Email Assistant** — AI drafts professional emails automatically  
+-  **Email Assistant** — AI drafts professional emails automatically you can review and send
 -  **Task Manager** — Add, complete and delete tasks with SQLite
   ## Upcoming Features
 - **Expense Tracker** — Track your monthly expenses
