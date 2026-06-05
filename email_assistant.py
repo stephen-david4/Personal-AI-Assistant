@@ -60,14 +60,19 @@ Purpose: {purpose}"""
         try:
             client   = Groq(api_key=st.secrets["GROQ_API_KEY"])
             response = client.chat.completions.create(
-                model="openai/gpt-oss-120b",
-                messages=[{'role': 'user', 'content': prompt}],
-                temperature=0.3
-                )
+               model="openai/gpt-oss-120b",
+               messages=[
+                  {
+                     "role": "user",
+                     "content": prompt
+                     }
+                  ],
+               temperature=0.3
+               )
            content = response.choices[0].message.content
             
         except Exception as e:
-            return '', f'❌ Ollama error: {str(e)}\n\nMake sure Ollama is running: run "ollama serve" in terminal.'
+            return '', f'❌ Groq  error: {str(e)}\n\nMake sure Ollama is running: run "ollama serve" in terminal.'
 
         # 
         subject = ''
