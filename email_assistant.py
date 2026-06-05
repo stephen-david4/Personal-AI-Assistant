@@ -5,6 +5,7 @@ import os
 from groq import Groq
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import streamlit as st
 
 
 class EmailAssistant:
