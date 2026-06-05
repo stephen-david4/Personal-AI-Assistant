@@ -2,7 +2,7 @@ import smtplib
 import json
 import re
 import os
-import ollama
+from groq import Groq
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
@@ -58,12 +58,22 @@ Purpose: {purpose}"""
 
        
         try:
-            response = ollama.chat(
-                model='llama3.2:1b',
-                messages=[{'role': 'user', 'content': prompt}],
-                options={'temperature': 0.3}
+            client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+            response = client.chat.completions.create(
+               model="openai/gpt-oss-120b",
+               messages=[
+                  {
+                     "role": "user",
+                     "content": prompt
+                     }
+                  ],
+                temperature=0.3
             )
-            content = response['message']['content'].strip()
+                
+               
+
+
+        content = response.choices[0].message.content.strip()
         except Exception as e:
             return '', f'❌ Ollama error: {str(e)}\n\nMake sure Ollama is running: run "ollama serve" in terminal.'
 
