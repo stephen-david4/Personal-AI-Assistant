@@ -59,12 +59,14 @@ Document:
 Question: {question}
 Answer:"""
 
-    
-        response = ollama.chat(
-            model='llama3.2:1b',
+        
+         client   = Groq(api_key=st.secrets["GROQ_API_KEY"])
+        response = client.chat.completions.create(
+           model="llama3-8b-8192",
+           messages=history,
             messages=[{'role': 'user', 'content': prompt}],
             options={"temperature": 0.3}
-        )
+           )
 
         answer  = response['message']['content']
         sources = ', '.join(set(citations))
