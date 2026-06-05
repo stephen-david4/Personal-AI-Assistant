@@ -1,10 +1,9 @@
 streamlit
-langchain==0.2.16
-langchain-community==0.2.16
-langchain-text-splitters==0.2.4
-langchain-chroma
-chromadb==0.4.24
+langchain
+langchain-community
+langchain-text-splitters
+chromadb
 sentence-transformers
 pypdf
+ollama
 groq
-protobuf==3.20.3
