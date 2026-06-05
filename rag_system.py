@@ -4,6 +4,7 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 import ollama
 from groq import Groq
+import streamlit as st
 
 
 class documentAssistant:
