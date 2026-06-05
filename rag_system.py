@@ -68,7 +68,5 @@ Answer:"""
             options={"temperature": 0.3}
            )
         answer = response.choices[0].message.content
-
-         
         sources = ', '.join(set(citations))
         return f'{answer}\n\nSources: {sources}'
