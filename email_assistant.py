@@ -6,6 +6,7 @@ import ollama
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from groq import Groq
+import streamlit as st
 
 
 class EmailAssistant:
@@ -73,7 +74,7 @@ Purpose: {purpose}"""
             content = response.choices[0].message.content
             
         except Exception as e:
-            return '', f'❌ Groq  error: {str(e)}\n\nMake sure Ollama is running: run "ollama serve" in terminal.'
+            return '', f'❌ Groq  error: {str(e)}\n\.'
 
         # 
         subject = ''
