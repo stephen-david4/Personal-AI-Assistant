@@ -6,11 +6,14 @@ from groq import Groq
 import streamlit as st
 
 
+
 class DocumentAssistant:
 
     def __init__(self, groq_api_key):
         self.embeddings = HuggingFaceEmbeddings(
-            model_name="all-MiniLM-L6-v2"
+           model_name="all-MiniLM-L6-v2",
+           model_kwargs={'device': 'cpu'},
+           encode_kwargs={'normalize_embeddings': False}
         )
         self.splitter    = RecursiveCharacterTextSplitter(
             chunk_size=500,
