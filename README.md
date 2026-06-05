@@ -11,7 +11,7 @@ LangChain, RAG, Groq, SQLite and Streamlit.
 -  **Document Q&A** — Upload PDFs, ask questions with page citations
 -  **Email Assistant** — AI drafts professional emails automatically  
 -  **Task Manager** — Add, complete and delete tasks with SQLite
-  ## Upcoming ##  Features
+  ## Upcoming Features
 - **Expense Tracker** — Track your monthly expenses
 
 ##  Tech Stack
