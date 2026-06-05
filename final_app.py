@@ -183,7 +183,7 @@ with tab1:
                 
                 reply = response.choices[0].message.content
                 
-                reply    = response['message']['content']
+                
                 st.write(reply)
 
         st.session_state.messages.append({'role': 'assistant', 'content': reply})
