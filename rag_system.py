@@ -2,7 +2,7 @@ from langchain_community.document_loaders import PyPDFLoader  # type: ignore
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
-import ollama
+from groq import Groq
 
 
 class documentAssistant:
