@@ -2,7 +2,7 @@ import streamlit as st
 import ollama
 import tempfile
 import os
-from rag_system import documentAssistant
+from rag_system import DocumentAssistant
 from todo_manager import TodoManager
 from email_assistant import EmailAssistant
 from groq import Groq
