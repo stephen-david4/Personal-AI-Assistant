@@ -176,11 +176,12 @@ with tab1:
                 ] + st.session_state.messages
 
                 client   = Groq(api_key=st.secrets["GROQ_API_KEY"])
-response = client.chat.completions.create(
-    model="llama3-8b-8192",
-    messages=history
-)
-reply = response.choices[0].message.content
+                response = client.chat.completions.create(
+                    model="llama3-8b-8192",
+                    messages=history
+                )
+                
+                reply = response.choices[0].message.content
                 
                 reply    = response['message']['content']
                 st.write(reply)
