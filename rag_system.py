@@ -1,79 +1,90 @@
-from langchain_community.document_loaders import PyPDFLoader  # type: ignore
+from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
-import ollama
 from groq import Groq
-import streamlit as st
 
 
-class documentAssistant:
+class DocumentAssistant:
 
-    def __init__(self):
+    def __init__(self, groq_api_key):
         self.embeddings = HuggingFaceEmbeddings(
             model_name="all-MiniLM-L6-v2"
         )
-        self.splitter   = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+        self.splitter    = RecursiveCharacterTextSplitter(
+            chunk_size=500,
+            chunk_overlap=50
+        )
         self.vectorstore = None
         self.doc_loaded  = False
+        self.client      = Groq(api_key=groq_api_key)
 
     def load_pdf(self, pdf_path, filename):
-        print(f'Loading {filename}....')
+        print(f"Loading {filename}...")
+
         loader = PyPDFLoader(pdf_path)
         pages  = loader.load()
 
+        # Tag every page with filename
         for page in pages:
             page.metadata['filename'] = filename
 
+        # Cut into chunks — OUTSIDE the loop
         chunks = self.splitter.split_documents(pages)
-        print(f'Created {len(chunks)} chunks')
+        print(f"Created {len(chunks)} chunks from {filename}")
 
-        self.vectorstore = Chroma.from_documents(
-            documents=chunks,
-            embedding=self.embeddings,
-            persist_directory='db',
-        )
+        # First PDF — create new database
+        # More PDFs — ADD to existing database
+        if self.vectorstore is None:
+            self.vectorstore = Chroma.from_documents(
+                documents=chunks,
+                embedding=self.embeddings,
+                persist_directory='./db'
+            )
+            print("New database created!")
+        else:
+            self.vectorstore.add_documents(chunks)
+            print(f"Added to existing database!")
 
         self.vectorstore.persist()
         self.doc_loaded = True
-        print('Document ready!')
+        print(f"Document ready!")
 
     def ask(self, question):
         if not self.doc_loaded:
-            return "Please load a document first."
+            return "Please upload a document first."
 
+        # Find relevant chunks
         results   = self.vectorstore.similarity_search(question, k=3)
         context   = ""
         citations = []
 
         for doc in results:
-            page = doc.metadata.get('page', 0) + 1
-            context += f'[page {page}]: {doc.page_content}\n'
-            citations.append(f'page {page}')
+            page     = doc.metadata.get('page', 0) + 1
+            filename = doc.metadata.get('filename', 'document')
+            context += f"[{filename} - Page {page}]: {doc.page_content}\n"
+            citations.append(f"{filename} Page {page}")
 
         prompt = f"""Answer using ONLY the document content below.
-If the answer is not found, say "Not in document."
-Always cite the page number.
+If answer not found say: Not found in document.
+Always mention filename and page number.
 
 Document:
 {context}
 
 Question: {question}
+
 Answer:"""
 
+        # Use Groq API
+        response = self.client.chat.completions.create(
+            model="llama3-8b-8192",
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.0
+        )
 
-        client = Groq(api_key=st.secrets["GROQ_API_KEY"])
-        response = client.chat.completions.create(
-           model="openai/gpt-oss-120b",
-           messages=[
-              {
-                 "role": "user",
-                 "content": prompt
-                 }
-              ],
-           temperature=0.3
-           )
-
-        answer = response.choices[0].message.content
+        answer  = response.choices[0].message.content
         sources = ', '.join(set(citations))
-        return f'{answer}\n\nSources: {sources}'
+        return f"{answer}\n\nSources: {sources}"
