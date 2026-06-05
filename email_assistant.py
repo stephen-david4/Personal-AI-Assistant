@@ -2,6 +2,7 @@ import smtplib
 import json
 import re
 import os
+import ollama
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from groq import Groq
