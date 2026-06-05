@@ -1,4 +1,3 @@
-import ollama
 
 def chat_with_ai(user_message,conversation_his=[]):
 
