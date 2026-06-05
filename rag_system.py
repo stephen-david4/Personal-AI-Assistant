@@ -3,6 +3,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 import ollama
+from groq import Groq
 
 
 class documentAssistant:
@@ -59,13 +60,19 @@ Document:
 Question: {question}
 Answer:"""
 
-    
-        response = ollama.chat(
-            model='llama3.2:1b',
-            messages=[{'role': 'user', 'content': prompt}],
-            options={"temperature": 0.3}
-        )
 
-        answer  = response['message']['content']
+        client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+        response = client.chat.completions.create(
+           model="openai/gpt-oss-120b",
+           messages=[
+              {
+                 "role": "user",
+                 "content": prompt
+                 }
+              ],
+           temperature=0.3
+           )
+
+        answer = response.choices[0].message.content
         sources = ', '.join(set(citations))
         return f'{answer}\n\nSources: {sources}'
