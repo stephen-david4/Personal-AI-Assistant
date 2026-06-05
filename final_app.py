@@ -1,5 +1,4 @@
 import streamlit as st
-import ollama
 import tempfile
 import os
 from rag_system import DocumentAssistant
