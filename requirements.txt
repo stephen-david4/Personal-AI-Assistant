@@ -1,11 +1,10 @@
 streamlit
-langchain==0.2.16
-langchain-community==0.2.16
-langchain-text-splitters==0.2.4
-chromadb==0.4.24
+langchain
+langchain-community
+langchain-text-splitters
+chromadb
 sentence-transformers
-pypdf
-groq
 torch
 torchvision
-protobuf==3.20.3
+pypdf
+groq
