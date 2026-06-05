@@ -148,7 +148,7 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
-tab1, tab2, tab3, tab4, tab5 = st.tabs(["AI Chat", "Research in Documents", "AI Email Assistant", "My Tasks", "Expense Tracker"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs([" Chat with AI ", "Research in Documents", "AI Email Assistant", "My Tasks", "Expense Tracker"])
 
 
 # Chat tab
