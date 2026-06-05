@@ -2,7 +2,7 @@ import streamlit as st
 from groq import Groq
 import tempfile
 import os
-from rag_system import DocumentAssistant
+from rag_system import documentAssistant
 from todo_manager import TodoManager
 from email_assistant import EmailAssistant
 
@@ -40,7 +40,7 @@ apply_theme()
 
 # Initialize Session State Variables
 if 'doc_ai'        not in st.session_state:
-    st.session_state.doc_ai        = DocumentAssistant(groq_api_key=st.secrets["GROQ_API_KEY"])
+    st.session_state.doc_ai        = documentAssistant(groq_api_key=st.secrets["GROQ_API_KEY"])
 if 'todos'         not in st.session_state:
     st.session_state.todos         = TodoManager()
 if 'email_ai'      not in st.session_state:
