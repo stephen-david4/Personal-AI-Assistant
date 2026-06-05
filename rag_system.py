@@ -60,12 +60,19 @@ Question: {question}
 Answer:"""
 
     
-        response = ollama.chat(
-            model='llama3.2:1b',
-            messages=[{'role': 'user', 'content': prompt}],
-            options={"temperature": 0.3}
+        client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+        response = client.chat.completions.create(
+            model="openai/gpt-oss-120b",
+            messages=[
+               {
+                   "role": "user",
+                   "content": prompt
+                   }
+                ],
+           temperature=0.3
         )
 
-        answer  = response['message']['content']
+
+        answer = response.choices[0].message.content
         sources = ', '.join(set(citations))
         return f'{answer}\n\nSources: {sources}'
