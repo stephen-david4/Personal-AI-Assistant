@@ -7,12 +7,13 @@ def chat_with_ai(user_message,conversation_his=[]):
         'content':user_message
     })
     
-    response = ollama.chat(
-        model='llama3.2:1b',
-        messages=conversation_his
-    )
-
-    ai_response = response['message']['content']
+    client   = Groq(api_key=st.secrets["GROQ_API_KEY"])
+                response = client.chat.completions.create(
+                    model="llama3-8b-8192",
+                    messages=history
+                )
+                ai_response  = response.choices[0].message.content
+    
 
     conversation_his.append({
         'role':'assistant',
