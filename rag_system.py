@@ -32,7 +32,7 @@ class documentAssistant:
             persist_directory='db',
         )
 
-        self.vectorstore.persist()
+        
         self.doc_loaded = True
         print('Document ready!')
 
