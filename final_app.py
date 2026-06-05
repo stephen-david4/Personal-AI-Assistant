@@ -5,6 +5,7 @@ import os
 from rag_system import documentAssistant
 from todo_manager import TodoManager
 from email_assistant import EmailAssistant
+from groq import Groq
 
 def apply_theme():
     st.markdown("""<style>
@@ -174,7 +175,13 @@ with tab1:
                     }
                 ] + st.session_state.messages
 
-                response = ollama.chat(model='llama3.2:1b', messages=history)
+                client   = Groq(api_key=st.secrets["GROQ_API_KEY"])
+response = client.chat.completions.create(
+    model="llama3-8b-8192",
+    messages=history
+)
+reply = response.choices[0].message.content
+                
                 reply    = response['message']['content']
                 st.write(reply)
 
