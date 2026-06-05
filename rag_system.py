@@ -1,21 +1,18 @@
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
+from langchain_community.embeddings import FastEmbedEmbeddings
 from langchain_community.vectorstores import Chroma
 from groq import Groq
 import streamlit as st
 
 
-
 class DocumentAssistant:
 
     def __init__(self, groq_api_key):
-        self.embeddings = HuggingFaceEmbeddings(
-           model_name="all-MiniLM-L6-v2",
-           model_kwargs={'device': 'cpu'},
-           encode_kwargs={'normalize_embeddings': False}
+        self.embeddings = FastEmbedEmbeddings(
+            model_name="BAAI/bge-small-en-v1.5"
         )
-        self.splitter    = RecursiveCharacterTextSplitter(
+        self.splitter = RecursiveCharacterTextSplitter(
             chunk_size=500,
             chunk_overlap=50
         )
@@ -29,16 +26,12 @@ class DocumentAssistant:
         loader = PyPDFLoader(pdf_path)
         pages  = loader.load()
 
-        # Tag every page with filename
         for page in pages:
             page.metadata['filename'] = filename
 
-        # Cut into chunks — OUTSIDE the loop
         chunks = self.splitter.split_documents(pages)
         print(f"Created {len(chunks)} chunks from {filename}")
 
-        # First PDF — create new database
-        # More PDFs — ADD to existing database
         if self.vectorstore is None:
             self.vectorstore = Chroma.from_documents(
                 documents=chunks,
@@ -58,7 +51,6 @@ class DocumentAssistant:
         if not self.doc_loaded:
             return "Please upload a document first."
 
-        # Find relevant chunks
         results   = self.vectorstore.similarity_search(question, k=3)
         context   = ""
         citations = []
@@ -80,7 +72,6 @@ Question: {question}
 
 Answer:"""
 
-        # Use Groq API
         response = self.client.chat.completions.create(
             model="llama3-8b-8192",
             messages=[
