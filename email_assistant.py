@@ -69,7 +69,7 @@ Purpose: {purpose}"""
                   ],
                temperature=0.3
                )
-           content = response.choices[0].message.content
+            content = response.choices[0].message.content
             
         except Exception as e:
             return '', f'❌ Groq  error: {str(e)}\n\nMake sure Ollama is running: run "ollama serve" in terminal.'
