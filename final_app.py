@@ -170,7 +170,7 @@ with tab1:
                 history = [
                     {
                         'role': 'system',
-                        'content': 'You are a helpful personal AI assistant for Stephen David. Be friendly and professional.'
+                        'content': 'You are a helpful personal AI assistant for user. Be friendly and professional.'
                     }
                 ] + st.session_state.messages
 
